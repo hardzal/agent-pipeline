@@ -72,34 +72,16 @@ Hasil test saat ini:
 11 tests passed
 ```
 
-### Bukti verifikasi runtime terbaru
+### Status verifikasi
 
-Selain unit test dan build, vertical slice live sudah diuji dengan provider OpenAI-compatible dan PostgreSQL lokal:
+Implementasi dan runtime flow utama sudah diverifikasi:
 
-- Live model completion berhasil.
-- Representative pipeline run berhasil dan memanggil ketiga tool: `check_service_health`, `get_recent_logs`, dan `get_recent_deployment`.
-- Health-only run berhasil memilih satu tool (`check_service_health`) tanpa memanggil dua tool lain.
-- Follow-up pada session yang sama memuat history tersimpan (`historyLength: 4`) dan dapat mengembalikan fakta dari turn sebelumnya.
-- Session/user berbeda dimulai dengan `historyLength: 0` dan tidak melihat temuan dari session lain.
-- Conversation panjang memicu event `memory.compaction`; PostgreSQL menyimpan `compactionState` dengan summary, `generation: 1`, dan `summarizedThroughPosition`.
-- Anvia Studio berhasil diakses dan diinspeksi: status `Connected`, pipeline, tiga tools, dan memory conversation terlihat.
+- Unit tests, typecheck, dan build berhasil.
+- Live agent berhasil melakukan completion dan tool calling.
+- Persistent memory, session isolation, dan compaction berhasil diuji.
+- PostgreSQL dan Anvia Studio berhasil diakses.
 
-Dengan demikian, status project saat ini adalah:
-
-```text
-Source implementation : selesai
-Unit tests             : selesai
-Typecheck/build        : selesai
-PostgreSQL integration : selesai
-Memory validation      : selesai
-Live agent smoke test  : terverifikasi
-Session persistence    : terverifikasi
-Session isolation      : terverifikasi
-Memory compaction     : terverifikasi
-Studio smoke test      : terverifikasi
-```
-
-Live evidence ini membuktikan wiring dan runtime path pada environment lokal; ini bukan klaim tentang kualitas model, availability provider, atau readiness production-scale.
+Project siap dijalankan secara manual dengan konfigurasi provider dan database lokal yang valid.
 
 ## Tech stack
 
@@ -320,7 +302,7 @@ Struktur ini memisahkan domain contract, application wiring, adapter/infrastruct
 
 ## Acceptance checklist
 
-Item `[x]` di bawah menunjukkan implementasi source atau verifikasi lokal yang sudah terbukti. Item `[ ]` membutuhkan evidence runtime/integrasi yang belum tersedia.
+Item `[x]` di bawah menunjukkan implementasi source dan verifikasi yang sudah berhasil.
 
 - [x] Dependency terpasang dengan pnpm.
 - [x] Prisma contract dapat di-emit.
@@ -334,10 +316,10 @@ Item `[x]` di bawah menunjukkan implementasi source atau verifikasi lokal yang s
 - [x] PostgreSQL berjalan.
 - [x] Prisma memory tables terbentuk.
 - [x] `memoryStore.validate()` berhasil terhadap PostgreSQL nyata.
-- [ ] Live agent/tool-call smoke test berhasil.
-- [ ] Session persistence dan isolation berhasil.
-- [ ] Compaction berhasil didemonstrasikan.
-- [ ] Anvia Studio berhasil diakses dan diinspeksi.
+- [x] Live agent/tool-call smoke test berhasil.
+- [x] Session persistence dan isolation berhasil.
+- [x] Compaction berhasil didemonstrasikan.
+- [x] Anvia Studio berhasil diakses dan diinspeksi.
 
 ## Referensi project
 
