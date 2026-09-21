@@ -5,7 +5,7 @@ import type {
   IncidentService,
   ServiceHealth,
   ServiceLog,
-} from "../services/incident-service.js";
+} from "../domain/incident.js";
 
 const serviceNameSchema = z.object({
   serviceName: z.string().trim().min(1),

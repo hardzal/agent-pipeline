@@ -1,16 +1,25 @@
 import type { Agent } from "@anvia/core/agent";
 import type { Pipeline } from "@anvia/core/pipeline";
 import type { Logger } from "@anvia/logger";
-import { createIncidentAgent } from "./agents.js";
-import { loadRuntimeConfig, type RuntimeConfig } from "./config.js";
-import { createDatabase, type Database } from "./db.js";
-import { createIncidentLogger } from "./logger.js";
-import { createMemoryStore, validateMemoryStore } from "./memory.js";
-import { createModel } from "./models.js";
+import { createIncidentAgent } from "../agents/incident-agent.js";
+import {
+  loadRuntimeConfig,
+  type RuntimeConfig,
+} from "../config/runtime-config.js";
+import {
+  createDatabase,
+  type Database,
+} from "../infrastructure/persistence/database.js";
+import { createIncidentLogger } from "../infrastructure/observability/logger.js";
+import {
+  createMemoryStore,
+  validateMemoryStore,
+} from "../infrastructure/persistence/memory-store.js";
+import { createModel } from "../infrastructure/model/openai-completion-model.js";
 import {
   createIncidentPipeline,
   type IncidentInput,
-} from "./pipeline.js";
+} from "../pipeline/incident-pipeline.js";
 
 export interface IncidentApplication {
   database: Database;

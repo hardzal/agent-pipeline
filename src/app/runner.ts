@@ -1,8 +1,11 @@
 import "dotenv/config";
 import { pathToFileURL } from "node:url";
 import { createIncidentApplication } from "./application.js";
-import { loadRuntimeConfig, type RuntimeMode } from "./config.js";
-import { IncidentInputSchema } from "./pipeline.js";
+import {
+  loadRuntimeConfig,
+  type RuntimeMode,
+} from "../config/runtime-config.js";
+import { IncidentInputSchema } from "../pipeline/incident-pipeline.js";
 
 export interface RunnerOptions {
   prompt: string;

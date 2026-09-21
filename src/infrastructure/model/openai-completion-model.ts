@@ -1,6 +1,6 @@
 import { OpenAIClient } from "@anvia/openai";
 import type { CompletionModel } from "@anvia/core/completion";
-import type { RuntimeConfig } from "./config.js";
+import type { RuntimeConfig } from "../../config/runtime-config.js";
 
 export function createModel(config: RuntimeConfig): CompletionModel {
   if (

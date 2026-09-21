@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { loadRuntimeConfig } from "../src/config.js";
+import { loadRuntimeConfig } from "../src/config/runtime-config.js";
 
 describe("loadRuntimeConfig", () => {
   it("allows mock configuration without provider or database secrets", () => {

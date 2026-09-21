@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   IncidentInputSchema,
   normalizeIncidentInput,
-} from "../src/pipeline.js";
+} from "../src/pipeline/incident-pipeline.js";
 
 describe("incident pipeline input", () => {
   it("accepts a session-scoped prompt and trims it", () => {

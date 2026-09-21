@@ -11,7 +11,7 @@
     "test:watch": "vitest",
     "dev": "tsx src/index.ts",
     "studio": "tsx src/index.ts",
-    "runner": "tsx src/runner.ts",
+    "runner": "tsx src/app/runner.ts",
     "prisma:emit": "prisma contract emit",
     "prisma:update": "prisma db update"
   },

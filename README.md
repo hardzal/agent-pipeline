@@ -72,15 +72,17 @@ Hasil test saat ini:
 11 tests passed
 ```
 
-### Acceptance yang masih pending
+### Bukti verifikasi runtime terbaru
 
-Database milestone sudah berhasil diverifikasi terhadap PostgreSQL lokal. Item yang masih pending adalah bagian yang membutuhkan provider model atau runtime Studio:
+Selain unit test dan build, vertical slice live sudah diuji dengan provider OpenAI-compatible dan PostgreSQL lokal:
 
-- Live model completion.
-- Pipeline run dengan agent dan tool calls menggunakan model nyata.
-- Session memory dan session isolation melalui agent run.
-- Memory compaction yang benar-benar terpicu dan menghasilkan `compactionState`.
-- Anvia Studio dapat diakses dan diinspeksi.
+- Live model completion berhasil.
+- Representative pipeline run berhasil dan memanggil ketiga tool: `check_service_health`, `get_recent_logs`, dan `get_recent_deployment`.
+- Health-only run berhasil memilih satu tool (`check_service_health`) tanpa memanggil dua tool lain.
+- Follow-up pada session yang sama memuat history tersimpan (`historyLength: 4`) dan dapat mengembalikan fakta dari turn sebelumnya.
+- Session/user berbeda dimulai dengan `historyLength: 0` dan tidak melihat temuan dari session lain.
+- Conversation panjang memicu event `memory.compaction`; PostgreSQL menyimpan `compactionState` dengan summary, `generation: 1`, dan `summarizedThroughPosition`.
+- Anvia Studio berhasil diakses dan diinspeksi: status `Connected`, pipeline, tiga tools, dan memory conversation terlihat.
 
 Dengan demikian, status project saat ini adalah:
 
@@ -90,9 +92,14 @@ Unit tests             : selesai
 Typecheck/build        : selesai
 PostgreSQL integration : selesai
 Memory validation      : selesai
-Live agent smoke test  : belum diverifikasi
-Studio smoke test      : belum diverifikasi
+Live agent smoke test  : terverifikasi
+Session persistence    : terverifikasi
+Session isolation      : terverifikasi
+Memory compaction     : terverifikasi
+Studio smoke test      : terverifikasi
 ```
+
+Live evidence ini membuktikan wiring dan runtime path pada environment lokal; ini bukan klaim tentang kualitas model, availability provider, atau readiness production-scale.
 
 ## Tech stack
 
@@ -256,42 +263,53 @@ pnpm runner -- --help
 ```text
 .
 ├── src/
-│   ├── agents.ts                 # Factory Incident Triage Agent
-│   ├── application.ts            # Composition root dan lifecycle
-│   ├── config.ts                 # Validasi runtime configuration
-│   ├── db.ts                     # Prisma PostgreSQL client
-│   ├── index.ts                  # Bootstrap Anvia Studio
-│   ├── logger.ts                 # Logger dan observability observer
-│   ├── memory.ts                 # PrismaMemoryStore dan validation
-│   ├── models.ts                 # OpenAI-compatible model factory
-│   ├── pipeline.ts               # Typed incident pipeline
-│   ├── prompts.ts                # Agent dan compaction instructions
-│   ├── runner.ts                 # Direct CLI runner
+│   ├── app/
+│   │   ├── application.ts            # Composition root dan lifecycle
+│   │   ├── runner.ts                 # Direct CLI runner
+│   │   └── studio.ts                 # Anvia Studio bootstrap
+│   ├── agents/
+│   │   ├── incident-agent.ts         # Factory Incident Triage Agent
+│   │   └── prompts.ts                # Agent dan compaction instructions
+│   ├── config/
+│   │   └── runtime-config.ts         # Validasi runtime configuration
+│   ├── domain/
+│   │   └── incident.ts               # Incident types dan service contract
+│   ├── infrastructure/
+│   │   ├── model/
+│   │   │   └── openai-completion-model.ts # Model adapter
+│   │   ├── observability/
+│   │   │   └── logger.ts              # Logger dan observer
+│   │   └── persistence/
+│   │       ├── database.ts            # Prisma PostgreSQL client
+│   │       ├── memory-store.ts        # PrismaMemoryStore dan validation
+│   │       └── prisma/                # Contract dan generated artifacts
+│   ├── pipeline/
+│   │   └── incident-pipeline.ts       # Typed incident pipeline
 │   ├── services/
-│   │   └── incident-service.ts   # Domain service dan mock scenarios
+│   │   ├── mock-incident-service.ts   # Mock service implementation
+│   │   └── mock-incident-scenarios.ts # Deterministic mock data
 │   ├── tools/
-│   │   └── incident-tools.ts     # Tiga Anvia tools
-│   └── prisma/
-│       ├── contract.prisma       # Memory contract
-│       └── generated/            # Generated contract JSON dan types
+│   │   └── incident-tools.ts          # Tiga Anvia tools
+│   └── index.ts                        # Thin Studio entry point
 ├── tests/
 │   ├── config.test.ts
 │   ├── pipeline.test.ts
 │   ├── services/
-│   │   └── incident-service.test.ts
+│   │   └── mock-incident-service.test.ts
 │   └── tools/
 │       └── incident-tools.test.ts
 ├── docs/
-│   └── plans.md                  # Implementation plan project
-├── docker-compose.yml            # PostgreSQL lokal
-├── prisma.config.ts              # Prisma 8 configuration
-├── .env.example                  # Environment template
+│   └── plans.md                        # Implementation plan project
+├── docker-compose.yml                   # PostgreSQL lokal
+├── prisma.config.ts                    # Prisma 8 configuration
+├── .env.example                        # Environment template
 ├── package.json
 ├── pnpm-lock.yaml
 ├── tsconfig.json
 └── tsconfig.test.json
 ```
 
+Struktur ini memisahkan domain contract, application wiring, adapter/infrastructure, dan feature orchestration tanpa menambahkan framework atau layer yang belum diperlukan.
 ## Batasan dan catatan desain
 
 - Incident data masih berasal dari `MockIncidentService`; belum ada monitoring API nyata.

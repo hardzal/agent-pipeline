@@ -5,13 +5,14 @@ import type { CompletionModel } from "@anvia/core/completion";
 import {
   createIncidentLogger,
   createIncidentObserver,
-} from "./logger.js";
-import { memoryCompactionInstructions, incidentAgentInstructions } from "./prompts.js";
+} from "../infrastructure/observability/logger.js";
 import {
-  MockIncidentService,
-  type IncidentService,
-} from "./services/incident-service.js";
-import { createIncidentTools } from "./tools/incident-tools.js";
+  memoryCompactionInstructions,
+  incidentAgentInstructions,
+} from "./prompts.js";
+import type { IncidentService } from "../domain/incident.js";
+import { MockIncidentService } from "../services/mock-incident-service.js";
+import { createIncidentTools } from "../tools/incident-tools.js";
 
 export interface IncidentAgentDependencies {
   model: CompletionModel;

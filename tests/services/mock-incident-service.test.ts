@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MockIncidentService } from "../../src/services/incident-service.js";
+import { MockIncidentService } from "../../src/services/mock-incident-service.js";
 
 describe("MockIncidentService", () => {
   const service = new MockIncidentService();

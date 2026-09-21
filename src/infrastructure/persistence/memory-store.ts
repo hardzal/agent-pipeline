@@ -1,6 +1,6 @@
 import { PrismaMemoryStore } from "@anvia/memory-prisma/v8";
 import type { MemoryStore } from "@anvia/core/memory";
-import type { Database } from "./db.js";
+import type { Database } from "./database.js";
 
 export function createMemoryStore(database: Database): PrismaMemoryStore {
   return new PrismaMemoryStore({
