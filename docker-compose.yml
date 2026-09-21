@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: incident-triage-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: anvia
+      POSTGRES_PASSWORD: anvia
+      POSTGRES_DB: anvia
+    ports:
+      - "5544:5432"
+    volumes:
+      - incident-triage-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  incident-triage-postgres-data:

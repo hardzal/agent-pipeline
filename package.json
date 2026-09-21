@@ -1,0 +1,35 @@
+{
+  "name": "agent-pipeline",
+  "description": "Incident triage agent built with Anvia SDK primitives",
+  "type": "module",
+  "packageManager": "pnpm@11.22.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev": "tsx src/index.ts",
+    "studio": "tsx src/index.ts",
+    "runner": "tsx src/runner.ts",
+    "prisma:emit": "prisma contract emit",
+    "prisma:update": "prisma db update"
+  },
+  "dependencies": {
+    "@anvia/core": "1.5.0",
+    "@anvia/logger": "1.1.4",
+    "@anvia/memory-prisma": "1.2.1",
+    "@anvia/openai": "1.1.5",
+    "@anvia/studio": "1.2.4",
+    "@prisma/orm-postgres": "8.0.0-rc.11",
+    "dotenv": "^18.0.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "prisma": "8.0.0-rc.15",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.1"
+  }
+}
