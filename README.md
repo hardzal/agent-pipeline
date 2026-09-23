@@ -51,6 +51,7 @@ PostgreSQL melalui Prisma Memory Store
 - Logger dan Anvia observer untuk agent/tool events.
 - Anvia Studio bootstrap.
 - Direct runner untuk menjalankan pipeline dari terminal.
+- Contoh payload input untuk setiap tool tersedia di `example/`.
 - Unit test untuk konfigurasi, pipeline, tools, dan mock service.
 
 ### Bukti verifikasi yang sudah berhasil
@@ -209,6 +210,26 @@ Argument `--` setelah nama script didukung karena dapat diteruskan oleh pnpm seb
 
 Runner live tetap membutuhkan konfigurasi provider dan PostgreSQL yang valid.
 
+## Contoh input tool
+
+Folder `example/` berisi payload JSON dalam format `.txt` yang dapat digunakan untuk setiap tool agent:
+
+```text
+example/check_service_health.txt
+example/get_recent_logs.txt
+example/get_recent_deployment.txt
+```
+
+Ketiga contoh menggunakan `payment-service`, salah satu scenario yang tersedia di `MockIncidentService`. Payload setiap tool memiliki bentuk yang sama:
+
+```json
+{
+  "serviceName": "payment-service"
+}
+```
+
+Untuk mencoba scenario lain, ganti `serviceName` dengan `auth-service` atau `notification-service`.
+
 ## Perintah development
 
 ```bash
@@ -244,6 +265,10 @@ pnpm runner -- --help
 
 ```text
 .
+├── example/
+│   ├── check_service_health.txt
+│   ├── get_recent_logs.txt
+│   └── get_recent_deployment.txt
 ├── src/
 │   ├── app/
 │   │   ├── application.ts            # Composition root dan lifecycle
